@@ -44,7 +44,7 @@ public class ChatClient extends GenericClient {
 		super(propertiesFile);
 
 		// Login
-		login("https://meta.stackexchange.com/users/login");
+		login("https://meta.stackexchange.com/users/login?returnurl=https%3a%2f%2fchat.stackexchange.com%2f");
 
 		// Homepage
 		HttpGet getRequest = new HttpGet(CHAT_SERVER_URL);

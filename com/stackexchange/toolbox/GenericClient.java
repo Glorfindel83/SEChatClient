@@ -41,6 +41,7 @@ public abstract class GenericClient implements Closeable {
 		String fkey;
 		try (CloseableHttpResponse httpResponse = client.execute(getRequest);
 				InputStream inputStream = httpResponse.getEntity().getContent()) {
+			getCookies(httpResponse);
 			Document document = Jsoup.parse(inputStream, "UTF-8", loginURL);
 			Element element = document.selectFirst("input[name='fkey']");
 			fkey = element.val();
@@ -53,7 +54,10 @@ public abstract class GenericClient implements Closeable {
 		params.add(new BasicNameValuePair("password", password));
 		postRequest.setEntity(new UrlEncodedFormEntity(params));
 		try (CloseableHttpResponse httpResponse = client.execute(postRequest)) {
-			// Store cookies
+			// Store cookies (but remember existing ones)
+			if (cookieString != null) {
+				httpResponse.addHeader("Set-Cookie", cookieString);
+			}
 			getCookies(httpResponse);
 		}
 	}
